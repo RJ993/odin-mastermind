@@ -6,7 +6,7 @@ def text_instructions(human, cpu)
   puts "The available colors are " + Rainbow('red, ').color(:red) + Rainbow('orange, ').color(:orange) + Rainbow('yellow, ').color(:yellow) + Rainbow('blue, ').color(:navyblue) + Rainbow('green, ').color(:darkgreen) + "and " + Rainbow('purple.').color(:purple)
 end
 
-def play(human, cpu, code_array, guess_array)
+def human_play(human, cpu, code_array, guess_array)
   attempts = 0
   until human.winner == true || attempts == 6
     guess_array = []
@@ -20,11 +20,16 @@ def play(human, cpu, code_array, guess_array)
 end
 
 def compare(human, cpu, code_array, guess_array)
-  if code_array == guess_array
+  if code_array == guess_array && human.role = 'guesser'
     human.status_change
   end
-  color_in_correct_place?(code_array, guess_array)
-  color_in_code?(code_array, guess_array)
+  if code_array == guess_array && cpu.role = 'guesser'
+    cpu.status_change
+  end 
+  if human.role = 'guesser'
+    color_in_correct_place?(code_array, guess_array)
+    color_in_code?(code_array, guess_array)
+  end
 end
 
 def declare_winner(human, cpu)

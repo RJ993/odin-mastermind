@@ -13,38 +13,49 @@ end
 
 class HumanPlayer < Player
   attr_reader :name
-  attr_accessor :winner
-
-  def initialize(name, status = false)
+  attr_accessor :winner, :role
+  def initialize(name, status = false, role = 'code_keeper')
     @name = name
     @winner = status
+    @role = role
     if name == ''
       @name = 'Major Zero'
     end
   end
-
-  def guesses(guess_array)
-    puts "What do you think the code combination is?"
+  def human_input(array)
     rejected_input = ['|', ' ', '+', '-', '\\', '/', ',', '.']
     5.times do
       guess = ''
       until rejected_input.any? { |char| guess.include?(char) } == false && guess != ''
       guess = gets.chomp.downcase
       end
-      colorize(guess_array, guess)
+      colorize(array, guess)
     end
+  end
+  def make_combination(code_array)
+    puts "What will be the code? Put the colors in ONE line at a time"
+      human_input(code_array)
+    puts "Correct Code: #{code_array[0]}, #{code_array[1]}, #{code_array[2]}, #{code_array[3]}, #{code_array[4]}"
+  end
+  def guesses(guess_array)
+    puts "What do you think the code combination is? Put the colors in ONE line at a time"
+      human_input(guess_array)
     puts "You guessed the code: #{guess_array[0]}, #{guess_array[1]}, #{guess_array[2]}, #{guess_array[3]}, #{guess_array[4]}"
   end
   def status_change
     self.winner = true
   end
+  def role_change
+    self.role = 'guesser'
+  end
 end
 
 class ComputerPlayer < Player
-  attr_accessor :winner
-  def initialize(name = 'CPU', status = false)
+  attr_accessor :winner, :role
+  def initialize(name = 'CPU', status = false, role = 'code_keeper')
     @name = name
     @winner = status
+    @role = role
   end
   def make_combination(code_array)
     5.times do
@@ -54,5 +65,8 @@ class ComputerPlayer < Player
   end
   def status_change
     self.winner = true
+  end
+  def role_change
+    self.role = 'guesser'
   end
 end
