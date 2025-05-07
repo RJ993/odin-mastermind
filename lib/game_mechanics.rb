@@ -48,7 +48,6 @@ def human_play(human, cpu, code_array, guess_array)
     human.guesses(guess_array)
     attempts += 1
     compare(human, cpu, code_array, guess_array)
-    puts attempts
   end
   winning?(human, cpu, code_array, guess_array)
   if attempts == 6 && human.winner == false
