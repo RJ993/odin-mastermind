@@ -6,39 +6,13 @@ def text_instructions(human, cpu)
   puts "The available colors are " + Rainbow('red, ').color(:red) + Rainbow('orange, ').color(:orange) + Rainbow('yellow, ').color(:yellow) + Rainbow('blue, ').color(:navyblue) + Rainbow('green, ').color(:darkgreen) + "and " + Rainbow('purple.').color(:purple)
 end
 
-def human_play(human, cpu, code_array, guess_array)
-  attempts = 0
-  until human.winner == true || attempts == 6
-    guess_array = []
-    human.guesses(guess_array)
-    compare(human, cpu, code_array, guess_array)
-    attempts += 1
-  end
-  if attempts == 6 && human.winner != true
-    cpu.status_change
-  end
-end
-
-def compare(human, cpu, code_array, guess_array)
-  if code_array == guess_array && human.role = 'guesser'
+def winning?(human, cpu, code_array, guess_array)
+  if code_array == guess_array && human.role == 'guesser'
     human.status_change
   end
-  if code_array == guess_array && cpu.role = 'guesser'
+  if code_array == guess_array && cpu.role == 'guesser'
     cpu.status_change
   end 
-  if human.role = 'guesser'
-    color_in_correct_place?(code_array, guess_array)
-    color_in_code?(code_array, guess_array)
-  end
-end
-
-def declare_winner(human, cpu)
-  if human.winner == true
-    puts "#{human.name} is the true Mastermind!"
-  end
-  if cpu.winner == true
-    puts "CPU is the true mastermind!"
-  end
 end
 
 def color_in_correct_place?(code_array, guess_array)
@@ -56,5 +30,39 @@ def color_in_code?(code_array, guess_array)
       if code_array.include?(color_A) == true
         puts "#{color_A} is in the code!"
       end
+  end
+end
+
+def compare(human, cpu, code_array, guess_array)
+  winning?(human, cpu, code_array, guess_array)
+  if human.role = 'guesser'
+    color_in_correct_place?(code_array, guess_array)
+    color_in_code?(code_array, guess_array)
+  end
+end
+
+def human_play(human, cpu, code_array, guess_array)
+  attempts = 0
+  until human.winner == true || attempts == 6
+    guess_array = []
+    human.guesses(guess_array)
+    attempts += 1
+    compare(human, cpu, code_array, guess_array)
+    puts attempts
+  end
+  winning?(human, cpu, code_array, guess_array)
+  if attempts == 6 && human.winner == false
+    cpu.status_change
+  end
+end
+
+#insert computer_play method here.
+
+def declare_winner(human, cpu)
+  if human.winner == true
+    puts "#{human.name} is the true Mastermind!"
+  end
+  if cpu.winner == true
+    puts "CPU is the true mastermind!"
   end
 end

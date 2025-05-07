@@ -34,6 +34,7 @@ class HumanPlayer < Player
   end
   def make_combination(code_array)
     puts "What will be the code? Put the colors in ONE line at a time"
+    puts "The available colors are " + Rainbow('red, ').color(:red) + Rainbow('orange, ').color(:orange) + Rainbow('yellow, ').color(:yellow) + Rainbow('blue, ').color(:navyblue) + Rainbow('green, ').color(:darkgreen) + "and " + Rainbow('purple.').color(:purple)
       human_input(code_array)
     puts "Correct Code: #{code_array[0]}, #{code_array[1]}, #{code_array[2]}, #{code_array[3]}, #{code_array[4]}"
   end
