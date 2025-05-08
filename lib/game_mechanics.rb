@@ -1,35 +1,30 @@
 require_relative './players'
 
-
-def text_instructions(human, cpu)
+def text_instructions(human, _cpu)
   puts "#{human.name}, The main objective is to guess the randomized combination of 6 colors.\nPut the colors in one by one. Do NOT try to put all the colors into one line. If you guess the colors in the correct order in 5 turns, you win!\nIf you can't guess, then the CPU wins."
-  puts "The available colors are " + Rainbow('red, ').color(:red) + Rainbow('orange, ').color(:orange) + Rainbow('yellow, ').color(:yellow) + Rainbow('blue, ').color(:navyblue) + Rainbow('green, ').color(:darkgreen) + "and " + Rainbow('purple.').color(:purple)
+  puts "The available colors are #{Rainbow('red, ').color(:red)}#{Rainbow('orange, ').color(:orange)}#{Rainbow('yellow, ').color(:yellow)}#{Rainbow('blue, ').color(:navyblue)}#{Rainbow('green, ').color(:darkgreen)}and #{Rainbow('purple.').color(:purple)}"
 end
 
 def winning?(human, cpu, code_array, guess_array)
-  if code_array == guess_array && human.role == 'guesser'
-    human.status_change
-  end
-  if code_array == guess_array && cpu.role == 'guesser'
-    cpu.status_change
-  end 
+  human.status_change if code_array == guess_array && human.role == 'guesser'
+  return unless code_array == guess_array && cpu.role == 'guesser'
+
+  cpu.status_change
 end
 
 def color_in_correct_place?(code_array, guess_array)
-  guess_array.each_with_index do |color_A, index_A|
-    code_array.each_with_index do |color_B, index_B|
-      if color_A == color_B && index_A == index_B
-        puts "Color #{index_A + 1}, which is #{color_A}, is in the right place!"
+  guess_array.each_with_index do |color_a, index_a|
+    code_array.each_with_index do |color_b, index_b|
+      if color_a == color_b && index_a == index_b
+        puts "Color #{index_a + 1}, which is #{color_a}, is in the right place!"
       end
     end
   end
 end
 
 def color_in_code?(code_array, guess_array)
-  guess_array.uniq.each do |color_A|
-      if code_array.include?(color_A) == true
-        puts "#{color_A} is in the code!"
-      end
+  guess_array.uniq.each do |color_a|
+    puts "#{color_a} is in the code!" if code_array.include?(color_a) == true
   end
 end
 
@@ -39,9 +34,9 @@ def compare(human, cpu, code_array, guess_array, old_guess = [])
     color_in_correct_place?(code_array, guess_array)
     color_in_code?(code_array, guess_array)
   end
-  if cpu.role == 'guesser'
-    guess_array.each {|color| old_guess.push(color)}
-  end
+  return unless cpu.role == 'guesser'
+
+  guess_array.each { |color| old_guess.push(color) }
 end
 
 def human_play(human, cpu, code_array, guess_array)
@@ -53,9 +48,9 @@ def human_play(human, cpu, code_array, guess_array)
     compare(human, cpu, code_array, guess_array)
   end
   winning?(human, cpu, code_array, guess_array)
-  if attempts == 5 && human.winner == false
-    cpu.status_change
-  end
+  return unless attempts == 5 && human.winner == false
+
+  cpu.status_change
 end
 
 def computer_play(human, cpu, code_array, guess_array)
@@ -69,16 +64,14 @@ def computer_play(human, cpu, code_array, guess_array)
     compare(human, cpu, code_array, guess_array, old_guess)
   end
   winning?(human, cpu, code_array, guess_array)
-  if attempts == 5 && cpu.winner == false
-    human.status_change
-  end
+  return unless attempts == 5 && cpu.winner == false
+
+  human.status_change
 end
 
 def declare_winner(human, cpu)
-  if human.winner == true
-    puts "#{human.name} is the true Mastermind!"
-  end
-  if cpu.winner == true
-    puts "CPU is the true mastermind!"
-  end
+  puts "#{human.name} is the true Mastermind!" if human.winner == true
+  return unless cpu.winner == true
+
+  puts 'CPU is the true mastermind!'
 end
