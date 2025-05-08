@@ -16,13 +16,13 @@ until guesser == "#{human.name.downcase}" || guesser == 'cpu'
 end
 if guesser == "#{human.name.downcase}"
   human.role = 'guesser'
-  cpu.make_combination(code_array)
+  cpu.insert_combination(code_array)
   text_instructions(human, cpu)
   human_play(human, cpu, code_array, guess_array)
 end
 if guesser == 'cpu'
   cpu.role = 'guesser'
   human.make_combination(code_array)
-  #insert computer_play method here
+  computer_play(human, cpu, code_array, guess_array)
 end
 declare_winner(human, cpu)
