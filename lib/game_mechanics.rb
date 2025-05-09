@@ -50,6 +50,7 @@ def human_play(human, cpu, code_array, guess_array)
   winning?(human, cpu, code_array, guess_array)
   return unless attempts == 5 && human.winner == false
 
+  puts "Sorry, but the correct code was --> #{code_array[0]}, #{code_array[1]}, #{code_array[2]}, #{code_array[3]}, #{code_array[4]}, #{code_array[5]}"
   cpu.status_change
 end
 
