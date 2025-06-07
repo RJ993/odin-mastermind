@@ -12,8 +12,7 @@ class Player
 end
 
 class HumanPlayer < Player
-  attr_reader :name
-  attr_accessor :winner, :role
+  attr_accessor :name, :winner, :role
 
   def initialize(name, status = false, role = 'code_keeper') # rubocop:disable Lint/MissingSuper
     @name = name
@@ -61,18 +60,29 @@ class HumanPlayer < Player
 end
 
 class ComputerPlayer < Player
-  attr_accessor :winner, :role
+  attr_accessor :winner, :role, :guess_history, :correct_places
 
   def initialize(name = 'CPU', status = false, role = 'code_keeper') # rubocop:disable Lint/MissingSuper
     @name = name
     @winner = status
     @role = role
+    @guess_history = []
+    @correct_places = []
   end
 
   def insert_combination(array)
-    6.times do
-      random_number = rand(1..6)
-      colorize(array, random_number)
+    if role == 'guesser'
+      3.times do
+        random_number = rand(1..6)
+        2.times do
+          colorize(array, random_number)
+        end
+      end
+    else
+      6.times do
+        random_number = rand(1..6)
+        colorize(array, random_number)
+      end
     end
   end
 
@@ -80,6 +90,7 @@ class ComputerPlayer < Player
     insert_combination(guess_array)
     check_for_color(guess_array, old_guess, code_array)
     correct_place?(guess_array, old_guess, code_array)
+    mark_correct_places(guess_array, code_array)
     puts "CPU guessed the code: #{guess_array[0]}, #{guess_array[1]}, #{guess_array[2]}, #{guess_array[3]}, #{guess_array[4]}, #{guess_array[5]}" # rubocop:disable Layout/LineLength
   end
 
@@ -103,12 +114,26 @@ class ComputerPlayer < Player
   end
 
   def check_for_color(guess_array, old_guess, code_array)
-    old_guess.uniq.each do |color_a|
-      next unless code_array.include?(color_a) == true
+    colors = [Rainbow('red').color(:red), Rainbow('orange').color(:orange),
+              Rainbow('yellow').color(:yellow), Rainbow('blue').color(:navyblue),
+              Rainbow('green').color(:darkgreen), Rainbow('purple').color(:purple)]
+    colors.each do |color|
+      next unless code_array.include?(color) == true && code_array.count(color) > old_guess.count(color)
 
       place = rand(0..5)
+
+      place = rand(0..5) until guess_history.any? do |variation|
+        variation[place] == color
+      end == false && correct_places.include?(place) == false
+
       guess_array.delete_at(place)
-      guess_array.insert(place, color_a)
+      guess_array.insert(place, color)
+    end
+  end
+
+  def mark_correct_places(guess_array, code_array)
+    guess_array.each_index do |index|
+      correct_places.push(index) if guess_array[index] == code_array[index] && correct_places.include?(index) == false
     end
   end
 end

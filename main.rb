@@ -7,6 +7,10 @@ guess_array = []
 
 puts 'What is your name, Mastermind?'
 human = HumanPlayer.new(gets.chomp)
+until human.name.downcase != 'cpu'
+  puts 'You are not a computer, please give yourself life. After all, It\'s the name that counts.'
+  human.name = gets.chomp
+end
 cpu = ComputerPlayer.new
 puts "Who is going to be guesser, #{human.name} or CPU?"
 guesser = gets.chomp.downcase

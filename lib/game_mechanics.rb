@@ -37,6 +37,7 @@ def compare(human, cpu, code_array, guess_array, old_guess = [])
   return unless cpu.role == 'guesser'
 
   guess_array.each { |color| old_guess.push(color) }
+  cpu.guess_history.push(old_guess)
 end
 
 def human_play(human, cpu, code_array, guess_array)
