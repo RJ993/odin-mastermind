@@ -27,9 +27,9 @@ class HumanPlayer < Player
     acceptable_input = %w[red yellow orange blue green purple]
     6.times do
       guess = ''
-      until acceptable_input.any? { |color| guess.include?(color) } == true
+      until acceptable_input.any? { |color| color == guess } == true
         puts 'Invalid input, Try again!' if acceptable_input.any? do |color|
-          guess.include?(color)
+          color == guess
         end == false && guess != ''
         guess = gets.chomp.downcase
       end
@@ -56,6 +56,22 @@ class HumanPlayer < Player
 
   def role_change
     self.role = 'guesser'
+  end
+
+  def color_in_correct_place?(code_array, guess_array)
+    guess_array.each_with_index do |color_a, index_a|
+      code_array.each_with_index do |color_b, index_b|
+        if color_a == color_b && index_a == index_b
+          puts "Color #{index_a + 1}, which is #{color_a}, is in the right place!"
+        end
+      end
+    end
+  end
+
+  def color_in_code?(code_array, guess_array)
+    guess_array.uniq.each do |color_a|
+      puts "#{color_a} is in the code!" if code_array.include?(color_a) == true
+    end
   end
 end
 
